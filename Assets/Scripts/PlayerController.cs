@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+
+public interface IPlayerListener {
+    void DidPickUp();
+}
 
 public class PlayerController : MonoBehaviour {
 
     public float speed;
-    public Text countText;
-    public Text winText;
+    public IPlayerListener listener;
 
     private Rigidbody2D rb2d;
-    private int count;
 
-    public void Start() {
+    void Start() {
     	rb2d = GetComponent<Rigidbody2D>();
-
-        count = 0;
-        UpdateTextUI();
-        winText.text = "";
     }
 
     public void FixedUpdate() {
@@ -31,17 +30,7 @@ public class PlayerController : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("PickUp")) {
             collision.gameObject.SetActive(false);
-            count++;
-            UpdateTextUI();
-        }
-    }
-
-    // MARK: - UI
-
-    private void UpdateTextUI() {
-        countText.text = "Count: " + count.ToString();
-        if (count >= 10) {
-            winText.text = "You won!";
+            listener.DidPickUp();
         }
     }
 }
