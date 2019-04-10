@@ -1,17 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
     public float speed;
-    private Rigidbody2D rb2d;
+    public Text countText;
+    public Text winText;
 
-    void Start() {
+    private Rigidbody2D rb2d;
+    private int count;
+
+    public void Start() {
     	rb2d = GetComponent<Rigidbody2D>();
+
+        count = 0;
+        UpdateTextUI();
+        winText.text = "";
     }
 
-    void FixedUpdate() {
+    public void FixedUpdate() {
     	float moveHorizontal = Input.GetAxis("Horizontal");
     	float moveVertical = Input.GetAxis("Vertical");
 
@@ -22,6 +31,17 @@ public class PlayerController : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("PickUp")) {
             collision.gameObject.SetActive(false);
-        }       
+            count++;
+            UpdateTextUI();
+        }
+    }
+
+    // MARK: - UI
+
+    private void UpdateTextUI() {
+        countText.text = "Count: " + count.ToString();
+        if (count >= 10) {
+            winText.text = "You won!";
+        }
     }
 }
