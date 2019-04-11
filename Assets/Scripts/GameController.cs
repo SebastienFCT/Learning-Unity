@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class GameController : MonoBehaviour, IPlayerListener {
+public class GameController : PlayerObserver {
 
     public GameObject[] pickUps;
     public PlayerController player;
@@ -13,8 +13,9 @@ public class GameController : MonoBehaviour, IPlayerListener {
     public Text resultText;
 
     protected virtual void Start() {
-        player.listener = this; // Interface isn't the best solution here as other component might be interested in the player activity as well. To study.
+        player.AddObserver(this);
         UpdateGoalText();
+        resultText.text = "";
     }
     
     void Update() {
@@ -27,18 +28,14 @@ public class GameController : MonoBehaviour, IPlayerListener {
         GameObject[] remainings = pickUps.Where(item => item.activeSelf).ToArray();
         goalText.text = "Remaining: " + remainings.Count().ToString();
 
-        // Good study point: should you set the empty value in `Start` and only update when the user wins/looses
-        // Or is it ok performance wise to update on every frame? My guess goes for the first solution...
-        if (remainings.Any()) {
-            resultText.text = "";
-        } else {
+        if (!remainings.Any()) {
             resultText.text = "You Won!";
         }
     }
 
-    // MARK: - Interfaces
+    // MARK: - Player observable
 
-    public void DidPickUp() {
+    public override void OnNotify() {
         UpdateGoalText();
     }
 }

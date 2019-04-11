@@ -4,16 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public interface IPlayerListener {
-    void DidPickUp();
+
+public abstract class PlayerObserver: MonoBehaviour {
+    public abstract void OnNotify();
 }
 
 public class PlayerController : MonoBehaviour {
 
     public float speed;
-    public IPlayerListener listener;
 
     private Rigidbody2D rb2d;
+    private readonly List<PlayerObserver> observers = new List<PlayerObserver>();
 
     void Start() {
     	rb2d = GetComponent<Rigidbody2D>();
@@ -30,7 +31,23 @@ public class PlayerController : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("PickUp")) {
             collision.gameObject.SetActive(false);
-            listener.DidPickUp();
+            Notify();
         }
+    }
+
+    // MARK: - Observer management
+
+    public void Notify() {
+        for (int i = 0; i < observers.Count; i++) {
+            observers[i].OnNotify();
+        }
+    }
+
+    public void AddObserver(PlayerObserver observer) {
+        observers.Add(observer);
+    }
+
+    public void RemoveObserver(PlayerObserver observer) {
+        observers.Remove(observer);
     }
 }
