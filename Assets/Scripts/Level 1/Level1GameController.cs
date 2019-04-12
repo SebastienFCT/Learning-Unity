@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Level1GameController : GameController {
 
@@ -15,7 +13,6 @@ public class Level1GameController : GameController {
     private void SetupSound() {
         AudioClip clip = Resources.Load("Sounds/freelance/restoration completed") as AudioClip;
 
-        Debug.Log("test" + clip.ToString());
         SoundManager.instance.PlaySingle(clip);
     }
 }
