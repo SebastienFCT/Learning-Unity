@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class ScrollingBackground : MonoBehaviour {
 
-    public float backgroundSize; 
+    public float backgroundSize;
+    public float speed;
 
     private Transform cameraTransform;
     private Transform[] layers;
-    private float viewZone = 10;
+    private float viewZone = 1;
     private int leftIndex;
     private int rightIndex;
+    private float lastCameraX;
 
     private void Start() {
         cameraTransform = Camera.main.transform;
+        lastCameraX = cameraTransform.position.x;
         layers = new Transform[transform.childCount];
 
         for (int i = 0; i < transform.childCount; i++) {
@@ -25,11 +28,17 @@ public class ScrollingBackground : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.A)) {
+
+        float deltaX = cameraTransform.position.x - lastCameraX;
+        transform.position += Vector3.right * (deltaX * speed);
+
+        lastCameraX = cameraTransform.position.x;
+
+        if (cameraTransform.position.x < (layers[leftIndex].transform.position.x + viewZone)) {
             ScrollLeft();
         }
-         
-        if (Input.GetKeyDown(KeyCode.D)) {
+
+        if (cameraTransform.position.x > (layers[rightIndex].transform.position.x - viewZone)) {
             ScrollRight();
         }
     }
