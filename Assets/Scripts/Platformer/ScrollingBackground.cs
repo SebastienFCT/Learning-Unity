@@ -48,7 +48,7 @@ public class ScrollingBackground : MonoBehaviour {
 
         layers[rightIndex].position = Vector3.right * (layers[leftIndex].position.x - backgroundSize);
 
-        leftIndex = rightIndex;
+        leftIndex = lastRight;
         rightIndex--;
 
         if (rightIndex < 0) {
@@ -61,7 +61,7 @@ public class ScrollingBackground : MonoBehaviour {
 
         layers[leftIndex].position = Vector3.right * (layers[rightIndex].position.x + backgroundSize);
 
-        rightIndex = leftIndex;
+        rightIndex = lastLeft;
         leftIndex++;
 
         if (leftIndex > layers.Length - 1) {
