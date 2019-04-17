@@ -27,10 +27,10 @@ public class ScrollingBackground : MonoBehaviour {
         rightIndex = layers.Length - 1;
     }
 
-    private void Update() {
+    private void FixedUpdate() {
 
         float deltaX = cameraTransform.position.x - lastCameraX;
-        transform.position += Vector3.right * (deltaX * speed);
+        transform.position += Vector3.left * (deltaX * speed);
 
         lastCameraX = cameraTransform.position.x;
 
